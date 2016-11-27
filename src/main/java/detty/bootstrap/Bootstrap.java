@@ -6,7 +6,8 @@ import detty.channel.AbstractChannelInitializer;
 import detty.channel.Channel;
 import detty.channel.ChannelFuture;
 import detty.channel.TCPChannel;
-import detty.event_loop.EventLoopGroup;
+import detty.channel.event.EventLoop;
+import detty.channel.event.EventLoopGroup;
 
 public class Bootstrap {
 	
@@ -14,7 +15,7 @@ public class Bootstrap {
 	
 	private Class<? extends Channel> channelClass = TCPChannel.class;
 
-	private EventLoopGroup group = new EventLoopGroup();
+	private EventLoopGroup group = new EventLoopGroup(4);
 
 	public Bootstrap channelInitializer(final AbstractChannelInitializer<Channel> initializer) {
 		this.channelInitializer = initializer;
@@ -26,15 +27,17 @@ public class Bootstrap {
 		return this;
 	}
 	
-	public Channel bind(String address, int port) throws Exception {
-		return bind(new InetSocketAddress(address, port));
+	public Channel connect(String address, int port) throws Exception {
+		return connect(new InetSocketAddress(address, port));
 	}
 
 	
-	private Channel bind(InetSocketAddress inetSocketAddress) throws Exception {
+	private Channel connect(InetSocketAddress inetSocketAddress) throws Exception {
 		Channel channel = newChannel();
+		// TODO: maybe init from loop thread
 		this.channelInitializer.init(channel);
 		this.group.register(channel);
+		channel.connect(inetSocketAddress);
 		return channel;
 	}
 
@@ -43,14 +46,10 @@ public class Bootstrap {
 			return this.channelClass.newInstance();
 		} catch (InstantiationException e) {
 			e.printStackTrace();
+			return null;
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
-		} finally {
 			return null;
 		}
-	}
-
-	public ChannelFuture bind(int port) {
-		throw new RuntimeException("Implement me.");
 	}
 }

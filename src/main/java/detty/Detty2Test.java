@@ -19,7 +19,7 @@ public class Detty2Test {
 						});
 					};
 				});
-		Channel future = boot.bind("localhost", 100);
+		Channel future = boot.connect("localhost", 100);
 	}
 
 }
