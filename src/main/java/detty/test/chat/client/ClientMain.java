@@ -9,7 +9,7 @@ public class ClientMain {
 	public static void main(String[] args) throws Exception {
 		System.out.println("Connecting to server...");
 		System.out.println(ADDRESS + ":" + PORT);
-		ChatClient client = new ChatClient("Tester");
+		ChatClient client = new ChatClient(args[0]);
 		client.connect(ADDRESS, PORT);
 		System.out.println("connected to server");
 		try (Scanner in = new Scanner(System.in)) {

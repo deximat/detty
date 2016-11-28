@@ -9,7 +9,6 @@ import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import detty.channel.Channel;
-import io.netty.handler.codec.http.multipart.InterfaceHttpPostRequestDecoder;
 
 public class EventLoop {
 	
@@ -71,7 +70,7 @@ public class EventLoop {
 			channel.finishConnection();
 			key.interestOps(key.interestOps() & ~SelectionKey.OP_CONNECT);
 		}
-		
+
 		if (key.isReadable()) {
 			channel.unsafeRead();
 			// drop interest op

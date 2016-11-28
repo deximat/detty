@@ -7,6 +7,7 @@ import java.net.Socket;
 import detty.test.chat.client.ClientMain;
 
 public class DummyServer {
+	
 	public static void main(String[] args) throws IOException, InterruptedException {
 		System.out.println("Dummy server started.");
 		ServerSocket serverSocket = new ServerSocket(ClientMain.PORT);
@@ -21,4 +22,5 @@ public class DummyServer {
 			}
 		}
 	}
+	
 }

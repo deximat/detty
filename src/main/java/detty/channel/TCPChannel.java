@@ -13,16 +13,22 @@ public class TCPChannel implements Channel {
 	private final SocketChannel javaChannel;
 	private final Pipeline pipeline;
 	
-	public TCPChannel() throws IOException {
-		this.javaChannel = SocketChannel.open();
+	public TCPChannel(SocketChannel channel) throws IOException {
+		this.javaChannel = channel;
 		this.javaChannel.configureBlocking(false);
 		this.pipeline = new Pipeline(this);
 	}
 	
+	public TCPChannel() throws IOException {
+		this(SocketChannel.open());
+	}
+	
+	@Override
 	public Pipeline pipeline() {
 		return this.pipeline;
 	}
 
+	@Override
 	public SocketChannel javaChannel() {
 		return this.javaChannel;
 	}
@@ -42,6 +48,7 @@ public class TCPChannel implements Channel {
 	@Override
 	public void writeAndFlush(byte[] message) {
 		try {
+			System.out.println("Writing to: " + javaChannel());
 			javaChannel().write(ByteBuffer.wrap(message));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -56,6 +63,11 @@ public class TCPChannel implements Channel {
 	@Override
 	public boolean finishConnection() throws IOException {
 		return this.javaChannel.finishConnect();
+	}
+
+	@Override
+	public boolean isAlive() {
+		return this.javaChannel.isOpen();
 	}
 
 }

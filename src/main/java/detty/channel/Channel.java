@@ -14,4 +14,5 @@ public interface Channel {
 	public void writeAndFlush(byte[] message);
 	public void connect(InetSocketAddress inetSocketAddress) throws Exception;
 	public boolean finishConnection() throws IOException;
+	public boolean isAlive();
 }

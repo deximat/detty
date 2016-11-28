@@ -27,6 +27,6 @@ public class ChatClient {
 	}
 	
 	public void sendMessage(String message) {
-		this.channel.writeAndFlush(message.getBytes());
+		this.channel.writeAndFlush((this.name + " : " + message).getBytes());
 	}
 }
