@@ -52,5 +52,10 @@ public interface Channel {
 	 */
 	void setChannelClosedListener(Runnable onChannelClosed);
 
+	/**
+	 * Kills channel.
+	 */
+	void kill();
+
 
 }

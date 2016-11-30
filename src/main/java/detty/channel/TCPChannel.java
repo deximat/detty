@@ -3,6 +3,7 @@ package detty.channel;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SocketChannel;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -102,6 +103,13 @@ public class TCPChannel implements InternalChannel {
 	public void unsafeWrite(ByteBuffer message) {
 		try {
 			this.javaChannel.write(message);
+		}  catch (ClosedChannelException e) {
+			try {
+				close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -116,5 +124,15 @@ public class TCPChannel implements InternalChannel {
 		builder.append(this.javaChannel.socket().getInetAddress()).append(")");
 
 		return builder.toString();
+	}
+
+	@Override
+	public void kill() {
+		try {
+			close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

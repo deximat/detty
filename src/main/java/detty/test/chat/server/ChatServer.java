@@ -1,11 +1,13 @@
 package detty.test.chat.server;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.TimeUnit;
 
 import detty.bootstrap.ServerBootstrap;
 import detty.channel.AbstractChannelInitializer;
 import detty.channel.Channel;
 import detty.channel.TCPChannel;
+import detty.channel.pipeline.security.IncomingBurstControlHandler;
 
 public class ChatServer {
 
@@ -23,6 +25,7 @@ public class ChatServer {
 					@Override
 					public void init(Channel channel) throws Exception {
 						ChatServer.this.users.add(channel);
+						channel.pipeline().addLast(new IncomingBurstControlHandler(10, 1, TimeUnit.SECONDS));
 						channel.pipeline().addLast(new BroadcastToAllHandler(
 								ChatServer.this.users));
 						channel.setChannelClosedListener(() -> {
